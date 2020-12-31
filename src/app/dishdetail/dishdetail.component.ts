@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
+import { FavoriteService } from '../services/favorite.service'
 import { Comment } from '../shared/comment';
 
 import { Params, ActivatedRoute } from '@angular/router';
@@ -42,8 +43,10 @@ export class DishdetailComponent implements OnInit {
 
   baseURL = baseURL;
   visibility = 'shown';
+  favorite = false;
 
   constructor(private dishservice: DishService,
+    private favoriteService: FavoriteService,
     private route: ActivatedRoute,
     private location: Location,
     private newComment: FormBuilder,
@@ -72,11 +75,21 @@ export class DishdetailComponent implements OnInit {
 
   
   ngOnInit() {
-    this.dishservice.getDishIds().subscribe(dishIds => this.dishIds = dishIds,
-      errmess => this.errMess = <any>errmess);
-    this.route.params.pipe(switchMap((params: Params) => { this.visibility = 'hidden'; return this.dishservice.getDish(+params['id']); }))
-      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); this.visibility = 'shown'; },
-        errmess => this.errMess = <any>errmess );
+    this.dishservice.getDishIds()
+      .subscribe(dishIds => this.dishIds = dishIds,
+        errmess => this.errMess = <any>errmess);
+    this.route.params
+      .pipe(switchMap((params: Params) => { 
+        this.visibility = 'hidden'; 
+        return this.dishservice.getDish(+params['id']); 
+      })
+    ).subscribe(dish => { 
+      this.dish = dish; 
+      this.dishcopy = dish; 
+      this.setPrevNext(dish._id); 
+      this.visibility = 'shown';
+      this.favoriteService.isFavorite(this.dish._id) 
+    }, errmess => this.errMess = <any>errmess );
   }
 
   createForm() {
@@ -143,6 +156,13 @@ export class DishdetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  addToFavorites() {
+    if (!this.favorite) {
+      this.favoriteService.postFavorite(this.dish._id)
+        .subscribe(favorites => { console.log(favorites); this.favorite = true; });
+    }
   }
 
 }
