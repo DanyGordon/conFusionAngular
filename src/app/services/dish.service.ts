@@ -46,4 +46,10 @@ export class DishService {
       .pipe(catchError(this.processHTTPMsgService.handleError));
 
   }
+
+  postComment(dishId: string, comment: any) {
+    return this.http.post(baseURL + 'dishes/' + dishId + '/comments', comment)
+    .pipe(catchError(this.processHTTPMsgService.handleError));
+
+  }
 }

@@ -38,7 +38,7 @@
             <mat-list-item *ngFor="let comment of dish.comments">
                 <span matLine> {{comment.comment}} </span>
                 <span matLine> {{comment.rating +' Stars'}} </span>
-                <span matLine> {{'-- ' + comment.author}} {{comment.date | date}} </span>
+                <span matLine> {{'-- ' + comment.author.firstname}} {{comment.createdAt | date}} </span>
             </mat-list-item>
         </mat-list>
     
@@ -47,7 +47,7 @@
                 <mat-list-item>
                     <span matLine *ngIf="commentPreview.comment"> {{commentPreview.comment}} </span>
                     <span matLine *ngIf="commentPreview.rating && (commentPreview.comment || commentPreview.author)"> {{commentPreview.rating +' Stars'}} </span>
-                    <span matLine *ngIf="commentPreview.author"> {{'-- ' + commentPreview.author}} {{commentPreview.date | date}} </span>
+                    <span matLine *ngIf="commentPreview.author"> {{'-- ' + commentPreview.author.firstname}} {{commentPreview.date | date}} </span>
                 </mat-list-item>
             </mat-list>
             <form novalidate [formGroup]="commentForm" #fform="ngForm" (ngSubmit)="onSubmit()">

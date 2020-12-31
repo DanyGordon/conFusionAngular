@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, DoCheck, Inject } from '@angular/core';
 import { Favorite } from '../shared/favorite';
 import { FavoriteService } from '../services/favorite.service';
 import { flyInOut, expand } from '../animations/app.animation';
@@ -24,7 +24,8 @@ export class FavoritesComponent implements OnInit {
   favorites: Favorite;
   delete: boolean;
   errMess: string;
-
+  
+  user = localStorage.getItem('user');
   baseURL = baseURL;
 
   constructor(private favoriteService: FavoriteService,

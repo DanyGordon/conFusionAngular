@@ -4,6 +4,8 @@ import { LoginComponent } from '../login/login.component';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
+import { Params, ActivatedRoute, Router } from '@angular/router';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -15,6 +17,7 @@ export class HeaderComponent implements OnInit {
   subscription: Subscription;
 
   constructor(public dialog: MatDialog,
+    private router: Router,
     private authService: AuthService ) { }
 
     ngOnInit() {
@@ -39,5 +42,8 @@ export class HeaderComponent implements OnInit {
     logOut() {
       this.username = undefined;
       this.authService.logOut();
+      if (this.router.url === '/favorites') {
+        this.router.navigate(['/home']);
+      }
     }
 }

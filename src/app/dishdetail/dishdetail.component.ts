@@ -81,7 +81,7 @@ export class DishdetailComponent implements OnInit {
     this.route.params
       .pipe(switchMap((params: Params) => { 
         this.visibility = 'hidden'; 
-        return this.dishservice.getDish(+params['id']); 
+        return this.dishservice.getDish(params['id']); 
       })
     ).subscribe(dish => { 
       this.dish = dish; 
@@ -130,22 +130,13 @@ export class DishdetailComponent implements OnInit {
   }
 
   onSubmit() {
-    this.comment = this.commentForm.value;
-    console.log(this.comment);
+    this.dishservice.postComment(this.dish._id, this.commentForm.value)
+      .subscribe(dish => this.dish = <Dish>dish);
     this.commentFormDirective.resetForm();
-    this.comment.date = String(new Date());
-    /*this.dishservice.addNewComment(this.comment);*/
     this.commentForm.reset({
-      author: '',
       rating: 5,
       comment: ''
     });
-    this.dishcopy.comments.push(this.comment);
-    this.dishservice.putDish(this.dishcopy)
-      .subscribe(dish => {
-        this.dish = dish; this.dishcopy = dish;
-      },
-      errmess => { this.dish = null; this.dishcopy = null; this.errMess = <any>errmess; });
   }
 
   setPrevNext(dishId: string) {
